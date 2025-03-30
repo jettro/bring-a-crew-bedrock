@@ -1,0 +1,119 @@
+ {
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fetch Schedule API",
+    "version": "1.0.0",
+    "description": "API to fetch the schedule of a person."
+  },
+  "paths": {
+    "/check_availability": {
+      "post": {
+        "summary": "Check availability",
+        "description": "Ask for the availability of a person during a week, providing the start of the week. Availability for a person is in the morning and or the afternoon.",
+        "operationId": "checkAvailability",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "description": "The start date for checking availability.",
+            "schema": {
+              "type": "string",
+              "description": "The start date to find availability for."
+            }
+          },
+          {
+            "name": "person",
+            "in": "query",
+            "required": true,
+            "description": "The person whose availability is being checked.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Availability check successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "type": "string",
+                      "description": "Availability status of the person."
+                    }
+                  },
+                  "required": [
+                    "availability"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/book_person": {
+      "post": {
+        "summary": "Book a meeting with a person",
+        "description": "Book a person for a specific date and time slot.",
+        "operationId": "bookPerson",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "The date for booking the person.",
+            "schema": {
+              "type": "string",
+              "description": "The date to book the person."
+            }
+          },
+          {
+            "name": "person",
+            "in": "query",
+            "required": true,
+            "description": "The person to be booked.",
+            "schema": {
+              "type": "string"
+            }
+          },
+            {
+                "name": "timeslot",
+                "in": "query",
+                "required": true,
+                "description": "The time slot for booking the person.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "morning",
+                    "afternoon"
+                  ]
+                }
+            }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Booking confirmation message."
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

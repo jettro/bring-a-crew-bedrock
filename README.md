@@ -14,3 +14,6 @@ Then login using aws cli:
 aws sso login
 ```
 
+## References
+
+[Example for the inline agent](https://github.com/awslabs/amazon-bedrock-agent-samples/tree/main/examples/agents/inline_agent)
