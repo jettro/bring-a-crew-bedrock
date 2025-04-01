@@ -1,0 +1,122 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Facility Management API",
+    "version": "1.0.0",
+    "description": "API to manage facility operations such as checking room availability and booking rooms."
+  },
+  "paths": {
+    "/check_availability_room": {
+      "post": {
+        "summary": "Check room availability",
+        "description": "Check the availability of a room for a specific date, time slot, and number of people.",
+        "operationId": "checkAvailableRoom",
+        "parameters": [
+          {
+            "name": "req_date",
+            "in": "query",
+            "required": true,
+            "description": "The date for checking room availability.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeslot",
+            "in": "query",
+            "required": true,
+            "description": "The time slot for checking room availability.",
+            "schema": {
+              "type": "string",
+              "enum": ["morning", "afternoon"]
+            }
+          },
+          {
+            "name": "number_of_people",
+            "in": "query",
+            "required": true,
+            "description": "The number of people for the room.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room availability check successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Room availability status."
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/book_room": {
+      "post": {
+        "summary": "Book a room",
+        "description": "Book a room for a specific date, time slot, and number of people.",
+        "operationId": "bookRoom",
+        "parameters": [
+          {
+            "name": "req_date",
+            "in": "query",
+            "required": true,
+            "description": "The date for booking the room.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeslot",
+            "in": "query",
+            "required": true,
+            "description": "The time slot for booking the room.",
+            "schema": {
+              "type": "string",
+              "enum": ["morning", "afternoon"]
+            }
+          },
+          {
+            "name": "number_of_people",
+            "in": "query",
+            "required": true,
+            "description": "The number of people for the room.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room booking successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Room booking confirmation message."
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Caterer Management API",
+    "version": "1.0.0",
+    "description": "API to manage caterer operations such as checking lunch options and ordering lunch."
+  },
+  "paths": {
+    "/check_lunch_options": {
+      "post": {
+        "summary": "Check lunch options",
+        "description": "Retrieve the available lunch options.",
+        "operationId": "checkLunchOptions",
+        "responses": {
+          "200": {
+            "description": "Lunch options retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Lunch options available to order message."
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order_lunch": {
+      "post": {
+        "summary": "Order lunch",
+        "description": "Order lunch for a specific date, room, number of people, and lunch option.",
+        "operationId": "orderLunch",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "The date for the lunch order.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "room_id",
+            "in": "query",
+            "required": true,
+            "description": "The room ID where the lunch will be served.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number_of_people",
+            "in": "query",
+            "required": true,
+            "description": "The number of people for the lunch.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "lunch_option",
+            "in": "query",
+            "required": false,
+            "description": "The lunch option to be ordered.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lunch order placed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Lunch order confirmation message."
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

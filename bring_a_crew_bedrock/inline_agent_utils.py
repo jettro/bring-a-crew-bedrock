@@ -101,32 +101,41 @@ def invoke_inline_agent_helper(client, request_params, trace_level="core"):
                                             "magenta",
                                         )
                                     )
-                                    if (
-                                        len(
-                                            _input["actionGroupInvocationInput"][
-                                                "parameters"
-                                            ]
-                                        )
-                                        == 1
-                                    ) and (
-                                        _input["actionGroupInvocationInput"][
-                                            "parameters"
-                                        ][0]["name"]
-                                        == "input_text"
-                                    ):
+                                    # TODO made a change here to print the inputs
+                                    if "parameters" not in _input["actionGroupInvocationInput"]:
                                         print(
                                             colored(
-                                                f"{_input['actionGroupInvocationInput']['parameters'][0]['value']}",
+                                                f"  No parameters provided.\n",
                                                 "magenta",
                                             )
                                         )
                                     else:
-                                        print(
-                                            colored(
-                                                f"{_input['actionGroupInvocationInput']['parameters']}\n",
-                                                "magenta",
+                                        if (
+                                            len(
+                                                _input["actionGroupInvocationInput"][
+                                                    "parameters"
+                                                ]
                                             )
-                                        )
+                                            == 1
+                                        ) and (
+                                            _input["actionGroupInvocationInput"][
+                                                "parameters"
+                                            ][0]["name"]
+                                            == "input_text"
+                                        ):
+                                            print(
+                                                colored(
+                                                    f"{_input['actionGroupInvocationInput']['parameters'][0]['value']}",
+                                                    "magenta",
+                                                )
+                                            )
+                                        else:
+                                            print(
+                                                colored(
+                                                    f"{_input['actionGroupInvocationInput']['parameters']}\n",
+                                                    "magenta",
+                                                )
+                                            )
 
                             elif "codeInterpreterInvocationInput" in _input:
                                 if trace_level == "outline":

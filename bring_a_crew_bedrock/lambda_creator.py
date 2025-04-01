@@ -129,7 +129,7 @@ def add_bedrock_permission(lambda_client, lambda_name, region, account_id):
             SourceArn=f"arn:aws:bedrock:{region}:{account_id}:agent/*",
         )
         logger.info(f"Permission 'allow_bedrock2' added to Lambda function {lambda_name}.")
-    except botocore.exceptions.ClientError as e:
+    except lambda_client.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
             logger.info(f"No existing policy found for Lambda function {lambda_name}. Adding new permission.")
             lambda_client.add_permission(

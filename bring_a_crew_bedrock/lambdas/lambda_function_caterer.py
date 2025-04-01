@@ -1,26 +1,27 @@
 import json
 import logging
+import random
 import traceback
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def check_availability(date: str, person: str):
-    logger.info("check_availability: date=%s, person=%s", date, person)
-    if person.lower() == "alice":
-        return f"{person} is not available in the week starting with {date}, Charlie will replace her until further notice."
-    elif person.lower() == "bob":
-        return f"{person} is available in the week starting with {date} on Monday, Tuesday, and Thursday."
-    elif person.lower() == "charlie":
-        return f"{person} is available in the week starting with {date} on Monday in the morning, Tuesday, Thursday, and Friday in the morning."
+def check_lunch_options() -> list[str]:
+    return ["Pizza", "Sushi", "Burger", "Sandwich", "Salad", "Broodje kroket"]
+
+
+def order_lunch(date: str, room_id: str, number_of_people: int, lunch_option: str) -> str:
+    if lunch_option and lunch_option in check_lunch_options():
+        logger.info(f"Ordering lunch option for {lunch_option}")
     else:
-        return f"{person} is unknown to the system."
-
-
-def book_person(date: str, timeslot: str, person: str):
-    logger.info("book_person: date=%s, timeslot=%s, person=%s", date, timeslot, person)
-    return f"{person} is booked for a meeting on {date} at {timeslot}."
+        if lunch_option:
+            logger.info(f"Provided lunch option {lunch_option} is not available")
+            return f"This lunch cannot be ordered. Provided lunch option {lunch_option} is not available. Please order one of the following options for lunch: {', '.join(check_lunch_options())}"
+        else:
+            logger.info(f"No lunch option provided")
+            lunch_option = random.choice(check_lunch_options())
+    return f"Lunch order is received. {lunch_option} will be served in room {room_id} for {number_of_people} people on {date}"
 
 
 
@@ -38,17 +39,17 @@ def lambda_handler(event, context):
         parameters = event.get('parameters', [])
 
         has_error = False
-        if api_path == '/check_availability':
-            # Extract parameters for check_availability
-            start_date = next((param['value'] for param in parameters if param['name'] == 'start_date'), None)
-            person = next((param['value'] for param in parameters if param['name'] == 'person'), None)
-            function_response = check_availability(start_date, person)
-        elif api_path == '/book_person':
-            # Extract parameters for book_person
+        if api_path == '/check_lunch_options':
+            lunch_options = check_lunch_options()
+            logger.info(f"Available lunch options: {lunch_options}")
+            function_response = f"Available lunch options are: {' '.join(lunch_options)}"
+        elif api_path == '/order_lunch':
             date = next((param['value'] for param in parameters if param['name'] == 'date'), None)
-            timeslot = next((param['value'] for param in parameters if param['name'] == 'timeslot'), None)
-            person = next((param['value'] for param in parameters if param['name'] == 'person'), None)
-            function_response = f"{person} is booked for a meeting on {date} at {timeslot}."
+            room_id = next((param['value'] for param in parameters if param['name'] == 'room_id'), None)
+            number_of_people = next((param['value'] for param in parameters if param['name'] == 'number_of_people'), None)
+            lunch_option = next((param['value'] for param in parameters if param['name'] == 'lunch_option'), None)
+
+            function_response = order_lunch(date, room_id, number_of_people, lunch_option)
         else:
             logger.error(f"Unknown API path: {api_path}")
             raise ValueError(f"Unknown API path: {api_path}")

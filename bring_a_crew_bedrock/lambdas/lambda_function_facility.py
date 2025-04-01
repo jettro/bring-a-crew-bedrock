@@ -6,21 +6,15 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def check_availability(date: str, person: str):
-    logger.info("check_availability: date=%s, person=%s", date, person)
-    if person.lower() == "alice":
-        return f"{person} is not available in the week starting with {date}, Charlie will replace her until further notice."
-    elif person.lower() == "bob":
-        return f"{person} is available in the week starting with {date} on Monday, Tuesday, and Thursday."
-    elif person.lower() == "charlie":
-        return f"{person} is available in the week starting with {date} on Monday in the morning, Tuesday, Thursday, and Friday in the morning."
-    else:
-        return f"{person} is unknown to the system."
+def check_available_room(req_date: str, timeslot: str, number_of_people: int):
+    # This is a placeholder for the actual implementation
+    return f"Room with more then {number_of_people} seats is available on {req_date} for {timeslot}. You can book it."
 
 
-def book_person(date: str, timeslot: str, person: str):
-    logger.info("book_person: date=%s, timeslot=%s, person=%s", date, timeslot, person)
-    return f"{person} is booked for a meeting on {date} at {timeslot}."
+def book_room(req_date: str, timeslot: str, number_of_people: int):
+    room_id = f"max_{str(number_of_people)}_people"
+    # This is a placeholder for the actual implementation
+    return f"Room with more then {number_of_people} seats is booked on {req_date} for {timeslot} with id {room_id}."
 
 
 
@@ -38,17 +32,19 @@ def lambda_handler(event, context):
         parameters = event.get('parameters', [])
 
         has_error = False
-        if api_path == '/check_availability':
-            # Extract parameters for check_availability
-            start_date = next((param['value'] for param in parameters if param['name'] == 'start_date'), None)
-            person = next((param['value'] for param in parameters if param['name'] == 'person'), None)
-            function_response = check_availability(start_date, person)
-        elif api_path == '/book_person':
-            # Extract parameters for book_person
-            date = next((param['value'] for param in parameters if param['name'] == 'date'), None)
+        if api_path == '/check_availability_room':
+            # Extract parameters for check_availability_room
+            req_date = next((param['value'] for param in parameters if param['name'] == 'req_date'), None)
             timeslot = next((param['value'] for param in parameters if param['name'] == 'timeslot'), None)
-            person = next((param['value'] for param in parameters if param['name'] == 'person'), None)
-            function_response = f"{person} is booked for a meeting on {date} at {timeslot}."
+            number_of_people = next((param['value'] for param in parameters if param['name'] == 'number_of_people'), None)
+            function_response = check_available_room(req_date, timeslot, number_of_people)
+        elif api_path == '/book_room':
+            # Extract parameters for book_room
+            req_date = next((param['value'] for param in parameters if param['name'] == 'req_date'), None)
+            timeslot = next((param['value'] for param in parameters if param['name'] == 'timeslot'), None)
+            number_of_people = next((param['value'] for param in parameters if param['name'] == 'number_of_people'), None)
+
+            function_response = book_room(req_date, timeslot, number_of_people)
         else:
             logger.error(f"Unknown API path: {api_path}")
             raise ValueError(f"Unknown API path: {api_path}")
